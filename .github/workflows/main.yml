@@ -28,11 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-cov
-      
-      - name: Train models
-        run: |
-          python train_in_container.py
-      
+           
       - name: Run tests
         run: |
           python -m pytest tests/test_app.py -v --cov=app --cov-report=term-missing --cov-report=xml --junitxml=pytest.xml

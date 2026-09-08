@@ -35,7 +35,7 @@ jobs:
       
       - name: Run tests
         run: |
-          python -m pytest tests/test_app.py -v --cov=app --cov-report=term-missing
+          python -m pytest tests/test_app.py -v --cov=app --cov-report=term-missing --cov-report=xml --junitxml=pytest.xml
       
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -44,9 +44,9 @@ jobs:
           name: test-results
           path: |
             pytest.xml
-            .coverage
+            coverage.xml
 
-   build:
+  build:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'

@@ -1,0 +1,7 @@
+# ansible/vars.yml
+---
+# Production variables
+service_name: hm-classifier
+container_port: 8000
+container_name: hm-classifier
+image_tag: "latest"

@@ -1,0 +1,48 @@
+# .dockerignore
+# Игнорируем файлы, которые не нужны в образе
+
+# Виртуальные окружения
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Файлы тестов
+test_app.py
+test_api.py
+test_api.ps1
+run_all.bat
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Документация
+README.md
+*.md
+
+# Логи
+*.log
+
+# Docker файлы (не нужны внутри образа)
+Dockerfile
+.dockerignore
+
+# Другие временные файлы
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db

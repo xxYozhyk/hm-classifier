@@ -1,0 +1,12 @@
+# ansible/inventory.yml
+all:
+  hosts:
+    production_server:
+      ansible_host: YOUR_SERVER_IP  # Замените на IP вашего сервера
+      ansible_user: YOUR_USER       # Замените на пользователя (обычно root или ubuntu)
+      ansible_ssh_private_key_file: ~/.ssh/id_rsa
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    docker_image: "{{ lookup('env', 'CI_REGISTRY_IMAGE') }}:{{ lookup('env', 'CI_COMMIT_SHORT_SHA') }}"
+    container_name: hm-classifier
+    container_port: 8000

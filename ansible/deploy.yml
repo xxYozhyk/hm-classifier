@@ -1,0 +1,98 @@
+# ansible/deploy.yml
+---
+- name: Deploy H&M Classifier Service
+  hosts: production_server
+  become: yes
+  vars:
+    container_name: hm-classifier
+    container_port: 8000
+    image_tag: "latest"
+    registry: "{{ lookup('env', 'CI_REGISTRY') }}"
+    registry_user: "{{ lookup('env', 'CI_REGISTRY_USER') }}"
+    registry_password: "{{ lookup('env', 'CI_REGISTRY_PASSWORD') }}"
+
+  tasks:
+    - name: Update apt cache (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+
+    - name: Install Docker
+      apt:
+        name:
+          - docker.io
+          - docker-compose
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Ensure Docker service is running
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create Docker group
+      group:
+        name: docker
+        state: present
+
+    - name: Add user to Docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Docker login
+      command: |
+        docker login -u "{{ registry_user }}" -p "{{ registry_password }}" "{{ registry }}"
+      no_log: true
+
+    - name: Pull Docker image
+      command: |
+        docker pull "{{ registry }}/{{ container_name }}:{{ image_tag }}"
+      register: pull_result
+      changed_when: "'Downloaded newer image' in pull_result.stdout"
+
+    - name: Stop and remove old container
+      command: |
+        docker stop {{ container_name }} || true
+        docker rm {{ container_name }} || true
+      ignore_errors: yes
+
+    - name: Run Docker container
+      command: |
+        docker run -d \
+          --name {{ container_name }} \
+          --restart always \
+          -p {{ container_port }}:8000 \
+          "{{ registry }}/{{ container_name }}:{{ image_tag }}"
+      register: run_result
+
+    - name: Wait for service to start
+      wait_for:
+        port: "{{ container_port }}"
+        delay: 5
+        timeout: 60
+
+    - name: Check service health
+      uri:
+        url: "http://localhost:{{ container_port }}/health"
+        method: GET
+        status_code: 200
+      register: health_check
+      retries: 3
+      delay: 5
+      until: health_check.status == 200
+
+    - name: Display service status
+      debug:
+        msg: |
+          ✅ Service deployed successfully!
+          🌐 URL: http://{{ ansible_default_ipv4.address }}:{{ container_port }}
+          📊 Health: {{ health_check.json }}
+
+    - name: Clean up old Docker images
+      command: |
+        docker image prune -a -f --filter "until=24h"
+      ignore_errors: yes

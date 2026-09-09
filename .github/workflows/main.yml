@@ -105,10 +105,19 @@ jobs:
             -p 8000:8000 \
             ${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/hm-classifier:latest
           
-          # Wait for service to start
-          sleep 5
+          # Wait for service to start (with retry)
+          echo "⏳ Waiting for service to start..."
+          for i in {1..30}; do
+            if curl -s -f http://localhost:8000/health > /dev/null 2>&1; then
+              echo "✅ Service is ready!"
+              break
+            fi
+            echo "Attempt $i/30 - waiting..."
+            sleep 2
+          done
           
           # Check health
+          echo "Checking health endpoint..."
           curl -f http://localhost:8000/health || exit 1
           
           echo "✅ Deployment successful!"

@@ -125,6 +125,6 @@ jobs:
         run: |
           echo "Testing prediction endpoint..."
           curl -X POST http://localhost:8000/predict \
-            -H "Content-Type: application/json" \
-            -d '{"name": "cotton t-shirt", "description": "soft cotton t-shirt with short sleeves"}' \
-            | jq .
+          -H "Content-Type: application/json" \
+          -d '{"prod_name": "cotton t-shirt", "detail_desc": "soft cotton t-shirt with short sleeves"}' \
+          jq .

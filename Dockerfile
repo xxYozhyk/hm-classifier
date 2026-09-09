@@ -8,33 +8,36 @@ RUN apt-get update && apt-get install -y \
     g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Копируем и устанавливаем зависимости
+# Копируем зависимости
 COPY requirements.txt .
+
+# Устанавливаем Python зависимости
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Проверяем версии
+# Проверяем установку
 RUN python -c "import numpy; print(f'NumPy: {numpy.__version__}')"
-RUN python -c "import sklearn; print(f'Scikit-learn: {sklearn.__version__}')"
 RUN python -c "import pandas; print(f'Pandas: {pandas.__version__}')"
+RUN python -c "import sklearn; print(f'Scikit-learn: {sklearn.__version__}')"
 
-# Копируем данные и скрипт обучения
+# Копируем модель и файлы для обучения
 COPY articles.csv .
 COPY train_in_container.py .
-
-# Обучаем модели
 RUN python train_in_container.py
 
-# Проверяем, что модели создались
-RUN ls -la /app/*.pickle
+# Копируем приложение (ИСПРАВЛЕНО!)
+COPY main.py .
 
-# Копируем приложение
-COPY app.py .
+# Копируем остальные файлы
+COPY lstm_model.pth .
+COPY tfidf_vectorizer.pickle .
+COPY label_encoder.pickle .
+COPY mlp_classifier.pickle .
+COPY model_metrics.json .
 
 # Создаем пользователя
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
 
-EXPOSE 8000
-
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Запускаем приложение
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

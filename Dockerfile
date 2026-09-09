@@ -24,6 +24,9 @@ COPY tfidf_vectorizer.pickle .
 COPY label_encoder.pickle .
 COPY model_metrics.json .
 
+# Проверяем, что файлы скопировались
+RUN ls -la /app/
+
 # Создаем пользователя
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser

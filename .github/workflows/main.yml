@@ -91,21 +91,17 @@ jobs:
         run: |
           echo "🚀 Starting deployment..."
           
-          # Pull latest image
           docker pull ${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/hm-classifier:latest
           
-          # Stop and remove old container
           docker stop hm-classifier 2>/dev/null || true
           docker rm hm-classifier 2>/dev/null || true
           
-          # Run new container
           docker run -d \
             --name hm-classifier \
             --restart always \
             -p 8000:8000 \
             ${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/hm-classifier:latest
           
-          # Wait for service to start (with retry)
           echo "⏳ Waiting for service to start..."
           for i in {1..30}; do
             if curl -s -f http://localhost:8000/health > /dev/null 2>&1; then
@@ -116,8 +112,6 @@ jobs:
             sleep 2
           done
           
-          # Check health
-          echo "Checking health endpoint..."
           curl -f http://localhost:8000/health || exit 1
           
           echo "✅ Deployment successful!"

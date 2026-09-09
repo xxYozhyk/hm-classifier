@@ -15,24 +15,13 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Проверяем установку
-RUN python -c "import numpy; print(f'NumPy: {numpy.__version__}')"
-RUN python -c "import pandas; print(f'Pandas: {pandas.__version__}')"
-RUN python -c "import sklearn; print(f'Scikit-learn: {sklearn.__version__}')"
-
-# Копируем модель и файлы для обучения
-COPY articles.csv .
-COPY train_in_container.py .
-RUN python train_in_container.py
-
-# Копируем приложение (ИСПРАВЛЕНО!)
+# Копируем приложение
 COPY main.py .
 
-# Копируем остальные файлы
+# Копируем модель и файлы предобработки
 COPY lstm_model.pth .
 COPY tfidf_vectorizer.pickle .
 COPY label_encoder.pickle .
-COPY mlp_classifier.pickle .
 COPY model_metrics.json .
 
 # Создаем пользователя

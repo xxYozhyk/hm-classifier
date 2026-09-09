@@ -3,8 +3,8 @@
         "accuracy": 0.9295,
         "macro_f1": 0.9274453074902009
     },
-    "mlp_classifier": {
-        "accuracy": 0.94,
-        "macro_f1": 0.9403545206273952
+    "lstm": {
+        "accuracy": 0.895,
+        "macro_f1": 0.8895266360827065
     }
 }

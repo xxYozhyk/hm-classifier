@@ -1,4 +1,6 @@
+# ============================================
 # Python
+# ============================================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -10,13 +12,33 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+pythonenv*
 
+# ============================================
 # Pip
+# ============================================
 pip-log.txt
 pip-delete-this-directory.txt
 .pip_cache/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+*.egg
+MANIFEST
+dist/
+build/
+develop-eggs/
+eggs/
+downloads/
+parts/
+sdist/
+var/
+wheels/
+*.whl
 
-# Pytest
+# ============================================
+# Testing
+# ============================================
 .pytest_cache/
 .coverage
 htmlcov/
@@ -25,58 +47,217 @@ htmlcov/
 .dmypy.json
 dmypy.json
 .pyre/
+*.cover
+.hypothesis/
+.tox/
+pytest.xml
+coverage.xml
+junit.xml
 
+# ============================================
 # Jupyter Notebooks
+# ============================================
 .ipynb_checkpoints/
+*.ipynb
+!*.ipynb  # Раскомментируйте, если хотите сохранять ноутбуки
 
+# ============================================
 # IDEs
+# ============================================
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 .~*
+*.iml
+*.ipr
+*.iws
+.idea/
+.classpath
+.project
+.settings/
+*.code-workspace
 
+# ============================================
 # OS
+# ============================================
 .DS_Store
 Thumbs.db
 Desktop.ini
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+*.bak
 
+# ============================================
 # Environment variables
+# ============================================
 .env
 .env.local
 .env.*.local
+.env.production
+.env.staging
+*.secret
+secrets.yaml
+secrets.yml
 
+# ============================================
 # Logs and temporary files
+# ============================================
 *.log
 *.tmp
 *.temp
+*.cache
+*.pyc
+*.pyd
+*.pyo
 
+# ============================================
 # Docker
+# ============================================
 .dockerignore
 !docker-compose.yml
+docker-compose.override.yml
+.docker/
+docker/data/
+docker/logs/
 
+# ============================================
 # Git
+# ============================================
 *.orig
 *.rej
+*.patch
+.git/
+.gitignore
+.gitattributes
+.gitmodules
 
-# Project specific
+# ============================================
+# Project specific - Models
+# ============================================
+# Большие модели (сохраняем только обученные)
+*.pth
+*.pt
+*.h5
+*.hdf5
+*.pkl
 *.pickle
+*.joblib
+*.onnx
+*.tflite
+*.pb
+
+# Исключаем, кроме одного (раскомментируйте если нужно)
 !mlp_classifier.pickle
 !tfidf_vectorizer.pickle
 !label_encoder.pickle
-articles.csv
+!lstm_model.pth
+
+# ============================================
+# Data files
+# ============================================
+*.csv
+*.tsv
+*.xlsx
+*.xls
 *.db
 *.sqlite3
+*.sqlite
+*.parquet
+*.feather
+data/
+datasets/
+!articles.csv  # Раскомментируйте, если хотите сохранить датасет
 
+# ============================================
 # SSH keys (security!)
+# ============================================
 *.pem
 *.key
 *.crt
 *.p12
+*.pfx
+*.cer
+*.der
+*.csr
 id_rsa
 id_rsa.pub
+id_ecdsa
+id_ecdsa.pub
+id_ed25519
+id_ed25519.pub
 known_hosts
+*.ppk
+ssh-key*.txt
 
+# ============================================
 # CI/CD
+# ============================================
 *.pytest_cache/
+.cache/
+.sass-cache/
+.mypy_cache/
+.dockerignore
+.github/
+.gitlab/
+*.crt
+*.key
+
+# ============================================
+# Ansible
+# ============================================
+*.retry
+ansible/inventory/*.ini
+ansible/inventory/*.yml
+ansible/group_vars/
+ansible/host_vars/
+ansible/roles/*/files/*.key
+ansible/roles/*/files/*.pem
+
+# ============================================
+# Kubernetes
+# ============================================
+*.kubeconfig
+kubeconfig
+.kube/
+*.secret.yaml
+*.secret.yml
+
+# ============================================
+# Terraform
+# ============================================
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# ============================================
+# Documentation
+# ============================================
+docs/_build/
+docs/api/
+site/
+*.aux
+*.log
+*.out
+*.toc
+
+# ============================================
+# Miscellaneous
+# ============================================
+*.swp
+*.swo
+*~
+*.lock
+package-lock.json
+yarn.lock
+node_modules/

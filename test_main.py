@@ -1,13 +1,12 @@
-# tests/test_app.py
 import pytest
 from fastapi.testclient import TestClient
 import sys
 import os
 
 # Добавляем путь к приложению
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from app import app, load_models
+from main import app, load_models
 
 client = TestClient(app)
 
@@ -97,6 +96,5 @@ def test_empty_text(setup_models):
 
 def test_invalid_input(setup_models):
     """Тест с некорректным вводом"""
-    # Отсутствие полей
     response = client.post("/predict", json={})
     assert response.status_code == 422

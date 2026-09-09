@@ -29,13 +29,6 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov httpx
       
-      - name: Download test model files (if not in repo)
-        run: |
-          # Проверяем наличие модели, если нет - создаем заглушку для тестов
-          if [ ! -f "lstm_model.pth" ]; then
-            echo "⚠️ Model file not found, tests may fail"
-          fi
-      
       - name: Run tests
         run: |
           python -m pytest test_main.py -v --cov=. --cov-report=term-missing --cov-report=xml --junitxml=pytest.xml
@@ -52,7 +45,7 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       
@@ -88,13 +81,13 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     environment:
       name: production
     steps:
       - uses: actions/checkout@v4
       
-      - name: Deploy locally (for testing)
+      - name: Deploy locally
         run: |
           echo "🚀 Starting deployment..."
           
@@ -113,7 +106,7 @@ jobs:
             ${{ env.REGISTRY }}/${{ secrets.DOCKER_USERNAME }}/hm-classifier:latest
           
           # Wait for service to start
-          sleep 10
+          sleep 5
           
           # Check health
           curl -f http://localhost:8000/health || exit 1
@@ -125,6 +118,7 @@ jobs:
         run: |
           echo "Testing prediction endpoint..."
           curl -X POST http://localhost:8000/predict \
-          -H "Content-Type: application/json" \
-          -d '{"prod_name": "cotton t-shirt", "detail_desc": "soft cotton t-shirt with short sleeves"}' \
-          jq .
+            -H "Content-Type: application/json" \
+            -d '{"prod_name": "cotton t-shirt", "detail_desc": "soft cotton t-shirt with short sleeves"}'
+          echo ""
+          echo "✅ Prediction test completed!"

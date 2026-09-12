@@ -37,7 +37,7 @@ README.md
 # Логи
 *.log
 
-# Docker файлы (не нужны внутри образа)
+# Docker файлы
 Dockerfile
 .dockerignore
 

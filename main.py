@@ -1,4 +1,4 @@
-# app.py
+# main.py
 import pickle
 import json
 import numpy as np
